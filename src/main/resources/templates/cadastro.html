@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width" />
+<title>Cadastro</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+</head>
+<body>
+
+	<div class="container-fluid">
+		<h1>Cadastre-se</h1>
+
+		<form method="POST" th:object="${usuario}" th:action="@{/cadastro}">
+			<div class="form-group">
+				<label>Nome</label> <input type="text" class="form-control"
+					placeholder="Digite seu nome" th:field="*{nome}" />
+			</div>
+
+			<div class="form-group">
+				<label>CEP</label> <input type="text" class="form-control"
+					placeholder="Digite seu cep" th:field="*{cep}" />
+			</div>
+
+			<div class="form-group">
+				<label>Nº Casa</label> <input type="text" class="form-control"
+					placeholder="Digite o numero da sua casa" th:field="*{num_casa}" />
+			</div>
+
+			<div class="form-group">
+				<label>E-Mail</label> 
+				<input type="text" class="form-control"
+					placeholder="Digite seu email" th:field="*{email}" />
+				<label th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="alert-danger"></label>
+			</div>
+
+			<div class="form-group">
+				<label>Senha</label> <input type="password" class="form-control"
+					placeholder="Digite uma senha" th:field="*{senha}" />
+			</div>
+
+			<div class="form-group">
+				<button class="btn btn-success btn-block">Concluir</button>
+			</div>
+		</form>
+		
+		Já possui uma conta? clique <a class="link" th:href="@{/login}"> aqui</a> para realizar login
+	</div>
+
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</body>
+</html>
