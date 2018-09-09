@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width" />
-<title>Produtos</title>
+<title>Seus Produtos</title>
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
 </head>
@@ -22,15 +22,15 @@
 
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
-				<li class="nav-item" id="produtos"><a class="nav-link" th:href="@{/produtos}">Produtos
+				<li class="nav-item"><a class="nav-link" th:href="@{/produtos}">Produtos
 						<span class="sr-only">(current)</span>
 				</a></li>
 				<li class="nav-item"><a class="nav-link" th:href="@{/carrinho}">Carrinho</a>
-				<li class="nav-item"><a class="nav-link"  th:href="@{/compra}">Suas
+				<li class="nav-item"><a class="nav-link" th:href="@{/compra}">Suas
 						Compras</a>
 				<li class="nav-item"><a class="nav-link" th:href="@{/vendas}">Suas
 						Vendas</a>
-				<li class="nav-item"><a class="nav-link" th:href="@{/seus-produtos}">Seus
+				<li class="nav-item" id="produtosUsuario"><a class="nav-link" th:href="@{/seus-produtos}">Seus
 						Produtos</a>
 				<li class="nav-item"><a class="nav-link" href="#"
 					onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sair</a>
@@ -53,12 +53,7 @@
 				<span th:text="${session.message}"></span>
 		</div>
 		
-		<div class="alert alert-warning" id="modalWarning" style="display: none">
-			<button type="button" class="close" data-dismiss="alert">×</button>
-				<span>Não existe mais nenhum desse produto no estoque!</span>
-		</div>
-		
-		<h3>Produtos a venda</h3>	
+		<h3>Produtos que você colocou a venda</h3>
 
 		<table class="table table-striped table-hover">
 			<thead>
@@ -68,8 +63,6 @@
 					<td>Preço</td>
 					<td>Quantidade</td>
 					<td>Fabricante</td>
-					<td>Vendedor</td>
-					<td>Comprar</td>
 				</tr>
 			</thead>
 
@@ -78,128 +71,80 @@
 					<td th:text="${produto.id}" th:id=" 'id' + ${produto.id}"></td>
 					<td th:text="${produto.descricao}" th:id=" 'descricao' + ${produto.id}"></td>
 					<td th:text="${produto.preco}" th:id=" 'preco' + ${produto.id}"></td>
-					<th th:text="${produto.qtd}" th:id=" 'qtd' + ${produto.id}"></th>
+					<th th:text="${produto.qtd}"></th>
 					<th th:text="${produto.fabricante}"></th>
-					<th th:text="${produto.usuario.nome}"></th>
-					<th><a href="#" th:attr="data-id=${produto.id}"
-					 th:class="((${produto.qtd} == 0) ? 'btnAvisaFaltaEstoque' : 'addProduto')">Comprar</a></th>
 				</tr>
 			</tbody>
 
+			<tfoot>
+				<tr>
+					<td colspan="6"><a class="link" href="#" data-toggle="modal"
+						data-target="#modalAddProduto">Adicionar Novo Produto</a></td>
+				</tr>
+			</tfoot>
 		</table>
 
 	</div>
 
-	<!-- Modal para realizar compra -->
-	<div class="modal fade" id="modalCarrinho" tabindex="-1"
+	<!-- Modal de novo produto -->
+	<div class="modal fade" id="modalAddProduto" tabindex="-1"
 		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Adicionar Produto</h5>
+					<h5 class="modal-title" id="exampleModalLabel">Novo Produto</h5>
 					<button type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
-					<form method="POST" th:action="@{/carrinho/adicionar}" th:object="${produtoCarrinho}">
+					<form method="POST" th:object="${produto}" th:action="@{/produtos}">
 						<div class="form-group">
-							<input type="text" class="form-control"
-								placeholder="Descrição do Produto" required readonly="true" id="inpDesc"/>
-						</div>
-						
-						<div class="form-group">
-							<input type="number" class="form-control"
-								placeholder="Preco do Produto" required readonly="true" id="inpPreco"/>
+							<input type="text" th:field="*{descricao}" class="form-control"
+								placeholder="Descrição do Produto" required />
 						</div>
 
 						<div class="form-group">
-							<input type="number" class="form-control"
-								placeholder="Quantidade desejada" min="1" required id="inpQtd" th:field="*{qtd}"/>
+							<input type="number" th:field="*{preco}" class="form-control"
+								placeholder="Preço do Produto" min="1" required />
 						</div>
 
 						<div class="form-group">
-							<input type="number" class="form-control"
-								placeholder="Total" min="1" required readonly="true" id="inpTotal" th:field="*{preco_total}"/>
+							<input type="number" th:field="*{qtd}" class="form-control"
+								placeholder="Quantidade disponível" min="1" required />
 						</div>
-						<input type="hidden" id="inpIdProduto" th:field="*{id_produto}"/>
+
+						<div class="form-group">
+							<input type="text" th:field="*{fabricante}" class="form-control"
+								placeholder="Fabricante do produto" required />
+						</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
-						id="btnClose">Fechar</button>
-					
-					<button type="submit" class="btn btn-success">Adicionar</button>
+						data-dismiss="modal">Fechar</button>
+					<button type="submit" class="btn btn-success">Cadastrar</button>
 					</form>
 				</div>
 			</div>
 		</div>
 	</div>
-
+	
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 		
 	<script>
-		
-		//seta os dados do produto selecionado
-		$(".addProduto").on('click', function(){
-			var id = $(this).data('id');
-			var descricao = $("#descricao" + id).text();
-			var preco	  = $("#preco" + id).text();
-			var qtdDisponivel = $("#qtd" + id).text();
-			
-			$("#inpDesc").val(descricao);
-			$("#inpPreco").val(preco);
-			$("#inpIdProduto").val(id);
-			
-			//vai setar a quantidade máxima que o usuário pode comprar
-			$("#inpQtd").attr({
-				"max": qtdDisponivel
-			});
-			
-			$("#modalCarrinho").modal();
-		});
-		
-		//Calcula o preço que vai ser pago
-		$("#inpQtd").on('keyup', function(){
-			var total = $("#inpPreco").val() * $(this).val();
-			$("#inpTotal").val(total);			
-		});
-		
-		//fechar modal e limpar campos
-		$("#btnClose").on('click', function(){
-			
-			//limpando campos
-			$("#inpDesc").val("");
-			$("#inpPreco").val("");
-			$("#inpTotal").val("");
-			$("#inpQtd").val("");
-			$("#inpIdProduto").val("");
-			
-			//fechar modal
-			$("#modalCarrinho").modal('hide');
-		});
-		
+	
 		//Função que vai ocultar as mensagens
 		document.addEventListener('DOMContentLoaded', function(){ 
 	        setTimeout(function() {
 	            $("#divMessages").fadeOut().empty();
 	        }, 5000);
-	        
 	    }, false);
 		
-		//Função que emite um aviso quando o usuário tentar comprar um produto que não possui mais no estoque
-		$(".btnAvisaFaltaEstoque").on('click', function(){
-			$("#modalWarning").css('display', '');
-			$("#modalWarning").css('display', 'block');
-			setTimeout(function() {
-	            $("#modalWarning").fadeOut().empty();
-	        }, 5000);
-		});
-		
-		document.getElementById("produtos").className = "nav-item active";
+		document.getElementById("produtosUsuario").className = "nav-item active";
 	</script>
 </body>
 </html>

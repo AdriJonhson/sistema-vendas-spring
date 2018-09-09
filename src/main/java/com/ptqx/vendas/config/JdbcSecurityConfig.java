@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Configuration
+//@Configuration
 public class JdbcSecurityConfig {
 
 	public static final String USUARIO_POR_LOGIN = "SELECT email, senha, ativo, nome FROM usuario"

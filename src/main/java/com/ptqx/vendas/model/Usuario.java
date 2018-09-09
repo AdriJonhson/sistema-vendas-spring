@@ -24,6 +24,10 @@ public class Usuario{
 		return id;
 	}
 	
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	public boolean getAtivo() {
 		return ativo;
 	}
@@ -32,11 +36,11 @@ public class Usuario{
 		this.ativo = ativo;
 	}
 	
-	public String getnome() {
+	public String getNome() {
 		return nome;
 	}
 	
-	public void setnome(String nome) {
+	public void setNome(String nome) {
 		this.nome = nome;
 	}
 	
